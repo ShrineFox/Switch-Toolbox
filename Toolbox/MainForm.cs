@@ -17,6 +17,10 @@ using System.Reflection;
 using OpenTK.Graphics.OpenGL;
 using Toolbox.Library.NodeWrappers;
 using Toolbox.Library.Rendering;
+using FirstPlugin.Forms;
+using FirstPlugin.NodeWrappers;
+using Bfres.Structs;
+using FirstPlugin;
 
 namespace Toolbox
 {
@@ -27,6 +31,8 @@ namespace Toolbox
 
         IFileFormat[] SupportedFormats;
         IFileMenuExtension[] FileMenuExtensions;
+
+        public static string currentArchive = "";
 
         public void AddChildContainer(Form form)
         {
@@ -1488,12 +1494,17 @@ namespace Toolbox
         {
             if (fileFormat == null) return;
 
+            if (fileFormat.FilePath.EndsWith(".zs"))
+                currentArchive = fileFormat.FileName;
+
             if (fileFormat is STGenericTexture && exportMode == ExportMode.Textures) {
                 string name = ((STGenericTexture)fileFormat).Text;
                 ExportTexture(((STGenericTexture)fileFormat), settings, $"{outputFolder}/{name}", extension);
             }
             else if (fileFormat is IArchiveFile)
+            {
                 SearchArchive(settings, (IArchiveFile)fileFormat, extension, outputFolder, exportMode);
+            }
             else if (fileFormat is ITextureContainer && exportMode == ExportMode.Textures)
             {
                 string name = fileFormat.FileName.Split('.').FirstOrDefault();
@@ -1558,6 +1569,34 @@ namespace Toolbox
 
                 DAE.Export($"{path}.{extension}", daesettings, model, textures, skeleton);
             }
+            else
+            {
+                bool fileChanged = false;
+                string name = fileFormat.FileName.Split('.').FirstOrDefault();
+
+                var bfres = (BFRES)fileFormat;
+
+                foreach (var texture in bfres.TextureList)
+                {
+                    foreach (var directory in Directory.GetDirectories(outputFolder).Where(x => currentArchive.Contains(Path.GetFileName(x))))
+                    {
+                        foreach (var png in Directory.GetFiles(directory, "*.png"))
+                        {
+                            if (texture is TextureData && texture.Text == Path.GetFileNameWithoutExtension(png))
+                            {
+                                ((TextureData)texture).Replace(png, DefaultFormat: TEX_FORMAT.BC3_UNORM);
+                                fileChanged = true;
+                            }
+                        }
+                    }
+                }
+
+                if (!Directory.Exists(outputFolder))
+                    Directory.CreateDirectory(outputFolder);
+
+                if (fileChanged)
+                    STFileSaver.SaveFileFormat(fileFormat, Path.Combine(outputFolder, currentArchive), false);
+            }
 
             fileFormat.Unload();
         }
@@ -1566,6 +1605,7 @@ namespace Toolbox
         {
             Models,
             Textures,
+            Replace
         }
 
         private void ExportTexture(STGenericTexture tex, BatchFormatExport.Settings settings, string filePath, string ext) {
@@ -1597,6 +1637,104 @@ namespace Toolbox
                 {
                     failedFiles.Add($"{file} \n Error:\n {ex} \n");
                 }
+            }
+        }
+
+        private void batchReplaceTexturesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                FolderSelectDialog folderDlg = new FolderSelectDialog();
+                if (folderDlg.ShowDialog() == DialogResult.OK)
+                {
+                    BatchReplaceTextures(ofd.FileNames, folderDlg.SelectedPath);
+                }
+            }
+        }
+
+        private void BatchReplaceTextures(string[] fileNames, string selectedPath)
+        {
+            failedFiles = new List<string>();
+            BatchFormatExport form = new BatchFormatExport(new List<string>() { "Portable Graphics Network (.png)" });
+
+            foreach (var file in fileNames)
+            {
+                string extension = form.GetSelectedExtension();
+
+                IFileFormat fileFormat = null;
+                try
+                {
+                    fileFormat = STFileLoader.OpenFileFormat(file);
+                    SearchFileFormat(form.BatchSettings, fileFormat, extension, selectedPath, ExportMode.Replace);
+
+                }
+                catch (Exception ex)
+                {
+                    failedFiles.Add($"{file} \n Error:\n {ex} \n");
+                }
+            }
+
+        }
+
+        private void batchExportSARCToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                FolderSelectDialog folderDlg = new FolderSelectDialog();
+                if (folderDlg.ShowDialog() == DialogResult.OK)
+                {
+                    BatchExportSARC(ofd.FileNames, folderDlg.SelectedPath);
+                }
+            }
+        }
+
+        private void BatchExportSARC(string[] fileNames, string selectedPath)
+        {
+            failedFiles = new List<string>();
+            BatchFormatExport form = new BatchFormatExport(new List<string>() { "Portable Graphics Network (.png)" });
+
+            foreach (var file in fileNames)
+            {
+                string extension = form.GetSelectedExtension();
+
+                IFileFormat fileFormat = null;
+                try
+                {
+                    fileFormat = STFileLoader.OpenFileFormat(file);
+                    if (fileFormat is IArchiveFile)
+                    {
+                        //string outputFolder = Path.Combine(selectedPath, Path.GetFileNameWithoutExtension(file));
+                        //if (!Directory.Exists(outputFolder))
+                            //Directory.CreateDirectory(outputFolder);
+
+                        IArchiveFile archive = (IArchiveFile)fileFormat;
+                        foreach (var archiveFile in archive.Files)
+                        {
+                            var innerFile = archiveFile.OpenFile();
+                            if (innerFile is IExportableModelContainer)
+                            {
+                                foreach (var model in ((IExportableModelContainer)innerFile).ExportableModels)
+                                {
+                                    var bfres = (BFRES)innerFile;
+                                    using (FileStream fs = new FileStream($"{selectedPath}/{model.Text}.bfres", FileMode.Create))
+                                        bfres.Save(fs);
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+                    failedFiles.Add($"{file} \n Error:\n {ex} \n");
+                }
+
             }
         }
     }

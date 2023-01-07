@@ -1581,7 +1581,7 @@ namespace FirstPlugin
                         importer.SelectedMipCount = MaxMipLevel;
                     }
 
-                    if (importer.ShowDialog() == DialogResult.OK)
+                    //if (importer.ShowDialog() == DialogResult.OK)
                     {
                         ApplyImportSettings(setting, importer.CompressionMode, importer.MultiThreading);
                     }
