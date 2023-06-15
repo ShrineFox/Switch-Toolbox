@@ -48,6 +48,7 @@
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchExportModelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.experimentalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.batchReplaceBonesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cascadeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.minimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -192,6 +193,7 @@
             this.batchToolStripMenuItem,
             this.hashCalculatorToolStripMenuItem,
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem,
+            this.batchReplaceBonesToolStripMenuItem,
             this.batchExportModelsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 21);
@@ -230,6 +232,14 @@
             this.batchExportModelsToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
             this.batchExportModelsToolStripMenuItem.Text = "Batch Export Models";
             this.batchExportModelsToolStripMenuItem.Click += new System.EventHandler(this.batchExportModelsToolStripMenuItem_Click);
+            // 
+            // batchReplaceTexturesToolStripMenuItem
+            // 
+            this.batchReplaceBonesToolStripMenuItem.Name = "batchReplaceBonesToolStripMenuItem";
+            this.batchReplaceBonesToolStripMenuItem.Size = new System.Drawing.Size(397, 26);
+            this.batchReplaceBonesToolStripMenuItem.Text = "Batch Replace Bones";
+            this.batchReplaceBonesToolStripMenuItem.Click += new System.EventHandler(this.batchReplaceBonesToolStripMenuItem_Click);
+            // 
             // 
             // experimentalToolStripMenuItem
             // 
@@ -552,6 +562,7 @@
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compressionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem batchReplaceBonesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem experimentalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem windowsToolStripMenuItem;

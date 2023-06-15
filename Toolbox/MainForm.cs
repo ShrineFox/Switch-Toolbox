@@ -17,6 +17,7 @@ using System.Reflection;
 using OpenTK.Graphics.OpenGL;
 using Toolbox.Library.NodeWrappers;
 using Toolbox.Library.Rendering;
+using FirstPlugin;
 
 namespace Toolbox
 {
@@ -1568,6 +1569,44 @@ namespace Toolbox
         {
             Models,
             Textures,
+        }
+
+        private void batchReplaceBonesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                BatchReplaceBones(ofd.FileNames);
+            }
+        }
+
+        private void BatchReplaceBones(string[] fileNames)
+        {
+            foreach (var file in fileNames)
+            {
+                IFileFormat fileFormat = null;
+                fileFormat = STFileLoader.OpenFileFormat(file);
+                if (fileFormat is IExportableModelContainer)
+                {
+                    var bfres = new Syroot.NintenTools.NSW.Bfres.ResFile(file);
+
+                    OpenFileDialog ofd = new OpenFileDialog();
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        IFileFormat fileFormat2 = STFileLoader.OpenFileFormat(ofd.FileNames[0]);
+                        if (fileFormat is IExportableModelContainer)
+                        {
+                            var bfres2 = new Syroot.NintenTools.NSW.Bfres.ResFile(ofd.FileNames[0]);
+                            bfres.Models[0].Shapes.Clear();
+                            bfres.Models[0].VertexBuffers.Clear();
+                            bfres.Models[0].Skeleton = bfres2.Models[0].Skeleton;
+                        }
+                    }
+
+                    bfres.Save(new FileStream("./FRES.bfres.mc", FileMode.OpenOrCreate));
+                }
+            }
         }
 
         private void ExportTexture(STGenericTexture tex, BatchFormatExport.Settings settings, string filePath, string ext) {
