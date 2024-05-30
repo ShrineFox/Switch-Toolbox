@@ -1971,6 +1971,7 @@ namespace FirstPlugin
                         {
                             if (!ImportMissingTextures)
                             {
+                                /*
                                 string textureDetails = string.Join("\n",textureList);
                                 DialogResult result = MessageBox.Show($"Missing textures found! Would you like to use placeholders?\nTextures:\n{textureDetails}", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -1980,6 +1981,7 @@ namespace FirstPlugin
                                 }
                                 else
                                     return;
+                                */
                             }
 
                             if (ImportMissingTextures)

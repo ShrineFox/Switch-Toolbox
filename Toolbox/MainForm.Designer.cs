@@ -1,4 +1,6 @@
-﻿namespace Toolbox
+﻿using System;
+
+namespace Toolbox
 {
     partial class MainForm
     {
@@ -46,6 +48,7 @@
             this.batchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hashCalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.batchReplaceTexturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchExportModelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchReplaceFTPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchRenameBNTXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -196,6 +199,7 @@
             this.hashCalculatorToolStripMenuItem,
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem,
             this.batchExportModelsToolStripMenuItem,
+            this.batchReplaceTexturesToolStripMenuItem,
             this.batchReplaceFTPToolStripMenuItem,
             this.batchReplaceTXTGToolStripMenuItem,
             this.batchRenameBNTXToolStripMenuItem,});
@@ -257,6 +261,13 @@
             this.batchRenameBNTXToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
             this.batchRenameBNTXToolStripMenuItem.Text = "Batch Rename BNTX from Filename";
             this.batchRenameBNTXToolStripMenuItem.Click += new System.EventHandler(this.batchRenameBNTXToolStripMenuItem_Click);
+            // 
+            // batchReplaceTexturesToolStripMenuItem
+            // 
+            this.batchReplaceTexturesToolStripMenuItem.Name = "batchReplaceTexturesToolStripMenuItem";
+            this.batchReplaceTexturesToolStripMenuItem.Size = new System.Drawing.Size(397, 26);
+            this.batchReplaceTexturesToolStripMenuItem.Text = "Batch Replace Textures";
+            this.batchReplaceTexturesToolStripMenuItem.Click += new System.EventHandler(this.batchReplaceTexturesToolStripMenuItem_Click);
             // 
             // experimentalToolStripMenuItem
             // 
@@ -621,6 +632,7 @@
         private System.Windows.Forms.ToolStripMenuItem batchReplaceTXTGToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchRenameBNTXToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem batchReplaceTexturesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openUserFolderToolStripMenuItem;
     }
 }
